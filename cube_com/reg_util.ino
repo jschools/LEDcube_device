@@ -7,6 +7,7 @@
 void clearAllOutputs() {
   clearReg(PIN_DATA_0);
   clearReg(PIN_DATA_1);
+  clearReg(PIN_DATA_2);
 }
 
 // shift 0's into all registers at specified pin

@@ -10,12 +10,14 @@ void setup() {
   pinMode(PIN_ACTIVITY, OUTPUT);
   pinMode(PIN_DATA_0, OUTPUT);
   pinMode(PIN_DATA_1, OUTPUT);
+  pinMode(PIN_DATA_2, OUTPUT);
   
   digitalWrite(PIN_SHIFT_CLK, LOW);
   digitalWrite(PIN_LATCH_CLK, LOW);
   digitalWrite(PIN_ACTIVITY, LOW);
   digitalWrite(PIN_DATA_0, LOW);
   digitalWrite(PIN_DATA_1, LOW);
+  digitalWrite(PIN_DATA_2, LOW);
   
   clearAllOutputs();
 }
