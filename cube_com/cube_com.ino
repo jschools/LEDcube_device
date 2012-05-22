@@ -3,30 +3,48 @@
 #include "pins.h"
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   
   pinMode(PIN_SHIFT_CLK, OUTPUT);
   pinMode(PIN_LATCH_CLK, OUTPUT);
   pinMode(PIN_ACTIVITY, OUTPUT);
-  pinMode(PIN_DATA_0, OUTPUT);
-  pinMode(PIN_DATA_1, OUTPUT);
-  pinMode(PIN_DATA_2, OUTPUT);
-  
   digitalWrite(PIN_SHIFT_CLK, LOW);
   digitalWrite(PIN_LATCH_CLK, LOW);
   digitalWrite(PIN_ACTIVITY, LOW);
-  digitalWrite(PIN_DATA_0, LOW);
-  digitalWrite(PIN_DATA_1, LOW);
-  digitalWrite(PIN_DATA_2, LOW);
+  
+  for (int pin = PIN_DATA_0; pin <= PIN_DATA_7; pin++) {
+    pinMode(pin, OUTPUT);
+    digitalWrite(pin, LOW);
+  }
   
   clearAllOutputs();
 }
 
-unsigned char num = 0;
 void loop() {
-  fillRegWithByte(PIN_DATA_0, 0xff);
-  delay(500);
-  fillRegWithByte(PIN_DATA_0, 0x00);
-  delay(500);
-  hitHiLow(PIN_ACTIVITY);
+  takeCommandFromSerial();
+  delay(1);
+}
+
+void takeCommandFromSerial() {
+  int readVal = Serial.read();
+  byte b = 0x00;
+  switch (readVal) {
+  case 's':
+    shift();
+    latch();
+    break;
+  case '1':
+    b = 0xff;
+    writeBytesToRegisters(&b, 1);
+    break;
+  case '0':
+    b = 0x00;
+    writeBytesToRegisters(&b, 1);
+    break;
+  case 'p':
+    delay(10);
+    break;
+  default:
+    break;
+  }
 }
