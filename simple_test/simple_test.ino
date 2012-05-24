@@ -1,7 +1,7 @@
 
 int PIN_SHIFT_CLK = 2;
 int PIN_LATCH_CLK = 3;
-int PIN_DATA = 6;
+int PIN_DATA = 7;
 
 void setup() {
   pinMode(PIN_SHIFT_CLK, OUTPUT);
@@ -13,7 +13,7 @@ void setup() {
   digitalWrite(PIN_DATA, LOW);
   
   clearAll();
-  set(0xaa);
+  set(0xff);
 }
 
 void clearAll() {
