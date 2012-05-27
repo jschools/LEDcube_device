@@ -3,21 +3,11 @@
 #include "pins.h"
 
 void setup() {
+  // init serial
   Serial.begin(115200);
   
-  pinMode(PIN_SHIFT_CLK, OUTPUT);
-  pinMode(PIN_LATCH_CLK, OUTPUT);
-  pinMode(PIN_ACTIVITY, OUTPUT);
-  digitalWrite(PIN_SHIFT_CLK, LOW);
-  digitalWrite(PIN_LATCH_CLK, LOW);
-  digitalWrite(PIN_ACTIVITY, LOW);
-  
-  for (int pin = PIN_DATA_0; pin <= PIN_DATA_7; pin++) {
-    pinMode(pin, OUTPUT);
-    digitalWrite(pin, LOW);
-  }
-  
-  clearAllOutputs();
+  // init outputs
+  initPins();
 }
 
 void loop() {

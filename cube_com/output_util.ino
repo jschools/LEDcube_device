@@ -5,6 +5,35 @@
 #define LOWER_MASK 0x0f
 #define UPPER_MASK 0xf0
 
+// initializes all output pins to OUTPUT
+// writes LOW to all output pins
+// shifts 0's into all output registers
+void initPins() {
+  initPin(PIN_SHIFT_CLK);
+  initPin(PIN_LATCH_CLK);
+  initPin(PIN_ACTIVITY);
+  
+  initPin(PIN_DATA_0);
+  initPin(PIN_DATA_1);
+  initPin(PIN_DATA_2);
+  initPin(PIN_DATA_3);
+  initPin(PIN_DATA_4);
+  initPin(PIN_DATA_5);
+  initPin(PIN_DATA_6);
+  initPin(PIN_DATA_7);
+  
+  initPin(PIN_LAYER_SEL_0);
+  initPin(PIN_LAYER_SEL_1);
+  initPin(PIN_LAYER_SEL_2);
+  
+  clearAllOutputs();
+}
+
+void initPin(int pin) {
+  pinMode(pin, OUTPUT);
+  digitalWrite(pin, LOW);
+}
+
 // write 'length' bytes across pins
 // latch (once at end)
 void writeBytesToRegisters(byte* data, int length) {
@@ -32,9 +61,14 @@ void writeByteToRegisters(byte data) {
 // shift 0's into all registers
 // latch
 void clearAllOutputs() {
-  for (int pin = PIN_DATA_0; pin <= PIN_DATA_7; pin++) {
-    clearReg(pin);
-  }
+  clearReg(PIN_DATA_0);
+  clearReg(PIN_DATA_1);
+  clearReg(PIN_DATA_2);
+  clearReg(PIN_DATA_3);
+  clearReg(PIN_DATA_4);
+  clearReg(PIN_DATA_5);
+  clearReg(PIN_DATA_6);
+  clearReg(PIN_DATA_7);
 }
 
 // shift 0's into all registers at specified pin
