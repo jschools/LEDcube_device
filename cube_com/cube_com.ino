@@ -12,7 +12,6 @@ void setup() {
 
 void loop() {
   takeCommandFromSerial();
-  delay(1);
 }
 
 void takeCommandFromSerial() {
