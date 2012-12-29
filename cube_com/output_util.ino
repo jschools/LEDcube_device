@@ -35,7 +35,7 @@ void initPin(int pin) {
 }
 
 // write 'length' bytes across pins
-// latch (once at end)
+// latch at end
 void writeBytesToRegisters(byte* data, int length) {
   for (int i = 0; i < length; i++) {
     writeByteToRegisters(data[i]);
@@ -43,17 +43,17 @@ void writeBytesToRegisters(byte* data, int length) {
   latch();
 }
 
-// set one byte across pins
+// set one byte across pins and shift
 // no latch
 void writeByteToRegisters(byte data) {
-  byte lowerBits = (data & LOWER_MASK) << 4;
-  byte upperBits = (data & UPPER_MASK) >> 4;
+  byte lowerBits = data & LOWER_MASK;
+  byte upperBits = data & UPPER_MASK;
 
-  PORTB &= UPPER_MASK;
-  PORTB |= upperBits;
+  PORTD &= ~UPPER_MASK;
+  PORTD |= upperBits;
 
-  PORTD &= LOWER_MASK;
-  PORTD |= lowerBits;
+  PORTB &= ~LOWER_MASK;
+  PORTB |= lowerBits;
 
   shift();
 }
