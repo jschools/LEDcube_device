@@ -38,7 +38,7 @@ void layerIsr() {
 
 void loop() {
   analogWrite(LAYER_GLOBAL_ENABLE, 255);
-  Serial.print(1);
+  
 }
 
 void setLayer(int layer) {
