@@ -34,6 +34,10 @@ void initPin(int pin) {
   digitalWrite(pin, LOW);
 }
 
+void setGlobalEnable(boolean enabled) {
+  digitalWrite(LAYER_GLOBAL_ENABLE, enabled ? HIGH : LOW);
+}
+
 // write 'length' bytes across pins
 // latch at end
 void writeBytesToRegisters(byte* data, int length) {
@@ -56,6 +60,18 @@ void writeByteToRegisters(byte data) {
   PORTB |= lowerBits;
 
   shift();
+}
+
+void setLayerSelectBits(int layer) {
+  digitalWrite(LAYER_SELECT_0, layer & LAYER_MASK_0 ? HIGH : LOW);
+  digitalWrite(LAYER_SELECT_1, layer & LAYER_MASK_1 ? HIGH : LOW);
+  digitalWrite(LAYER_SELECT_2, layer & LAYER_MASK_2 ? HIGH : LOW);
+}
+
+void setLayer(int layer) {
+  setGlobalEnable(false);
+  setLayerSelectBits(layer);
+  setGlobalEnable(true);
 }
 
 // shift 0's into all registers
