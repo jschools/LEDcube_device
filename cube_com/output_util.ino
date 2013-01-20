@@ -72,9 +72,9 @@ void setLayerSelectBits(int layer) {
 }
 
 void setLayer(int layer) {
-  setGlobalEnable(false);
+  //setGlobalEnable(false);
   setLayerSelectBits(layer);
-  setGlobalEnable(true);
+  //setGlobalEnable(true);
 }
 
 // shift 0's into all registers

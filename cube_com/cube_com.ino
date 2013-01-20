@@ -1,7 +1,7 @@
-// simple_test_3
 
 #include "pins.h"
 #include "layer.h"
+#include <TimerOne.h>
 
 volatile unsigned char currentLayer = 0;
 
@@ -12,21 +12,26 @@ void setup() {
   // init outputs
   initPins();
   
-  setLayer(currentLayer);
+  Timer1.initialize(500);
+  Timer1.attachInterrupt(layerIsr);
 }
 
 void loop() {
   takeCommandFromSerial();
+  //currentLayer++;
+  //setLayer(currentLayer);
+  //delay(100);
+}
+
+void layerIsr() {
+  currentLayer++;
+  setLayer(currentLayer);
 }
 
 void takeCommandFromSerial() {
   int readVal = Serial.read();
   byte b = 0x00;
   switch (readVal) {
-  case 's':
-    shift();
-    latch();
-    break;
   case '1':
     b = 0xff;
     writeBytesToRegisters(&b, 1);
@@ -34,13 +39,6 @@ void takeCommandFromSerial() {
   case '0':
     b = 0x00;
     writeBytesToRegisters(&b, 1);
-    break;
-  case '.':
-    currentLayer++;
-    setLayer(currentLayer);
-    break;
-  case 'p':
-    delay(10);
     break;
   default:
     break;
