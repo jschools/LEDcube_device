@@ -1,17 +1,37 @@
 
+#include <stdlib.h>
 #include "pins.h"
 #include "layer.h"
 #include <TimerOne.h>
 
-volatile unsigned char currentLayer = 0;
+#define BUFFER_A 0
+#define BUFFER_B 1
+
+#define FRAME_SIZE 8
+#define BUFFER_LENGTH (FRAME_SIZE * FRAME_SIZE)
+
+// global state
+byte currentLayer = 0;
+byte readBuffer = BUFFER_A;
+byte writeBuffer = BUFFER_B;
+
+// buffers
+byte* frameBufferA;
+byte* frameBufferB;
+
 
 void setup() {
-  // init serial
-  Serial.begin(115200);
+  // buffers
+  frameBufferA = (byte*) malloc(BUFFER_LENGTH * sizeof(byte));
+  frameBufferB = (byte*) malloc(BUFFER_LENGTH * sizeof(byte));
   
   // init outputs
   initPins();
   
+  // init serial
+  Serial.begin(115200);
+  
+  // initialize the timer interrupt
   Timer1.initialize(500);
   Timer1.attachInterrupt(layerIsr);
 }
@@ -44,3 +64,19 @@ void takeCommandFromSerial() {
     break;
   }
 }
+
+void swapBuffer() {
+  if (readBuffer == BUFFER_A) {
+    readBuffer = BUFFER_B;
+    writeBuffer = BUFFER_A;
+  }
+  else {
+    readBuffer = BUFFER_A;
+    writeBuffer = BUFFER_B;
+  }
+}
+
+
+
+
+
