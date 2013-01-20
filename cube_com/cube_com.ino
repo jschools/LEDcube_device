@@ -4,26 +4,28 @@
 #include "layer.h"
 #include <TimerOne.h>
 
-#define BUFFER_A 0
-#define BUFFER_B 1
+#define DISPLAY_BUFFER_A 0
+#define DISPLAY_BUFFER_B 1
 
-#define FRAME_SIZE 8
-#define BUFFER_LENGTH (FRAME_SIZE * FRAME_SIZE)
+#define DISPLAY_BUFFER_LENGTH 64
+#define FRAME_BUFFER_LENGTH 16
+
 
 // global state
 byte currentLayer = 0;
-byte readBuffer = BUFFER_A;
-byte writeBuffer = BUFFER_B;
+byte readBuffer = DISPLAY_BUFFER_A;
+byte writeBuffer = DISPLAY_BUFFER_B;
+byte readFrameIdx;
+byte writeFrameIdx;
 
 // buffers
-byte* frameBufferA;
-byte* frameBufferB;
-
+byte* displayBufferA;
+byte* displayBufferB;
 
 void setup() {
   // buffers
-  frameBufferA = (byte*) malloc(BUFFER_LENGTH * sizeof(byte));
-  frameBufferB = (byte*) malloc(BUFFER_LENGTH * sizeof(byte));
+  displayBufferA = (byte*) calloc(DISPLAY_BUFFER_LENGTH, sizeof(byte));
+  displayBufferA = (byte*) calloc(DISPLAY_BUFFER_LENGTH, sizeof(byte));
   
   // init outputs
   initPins();
@@ -37,10 +39,7 @@ void setup() {
 }
 
 void loop() {
-  takeCommandFromSerial();
-  //currentLayer++;
-  //setLayer(currentLayer);
-  //delay(100);
+  
 }
 
 void layerIsr() {
@@ -66,13 +65,13 @@ void takeCommandFromSerial() {
 }
 
 void swapBuffer() {
-  if (readBuffer == BUFFER_A) {
-    readBuffer = BUFFER_B;
-    writeBuffer = BUFFER_A;
+  if (readBuffer == DISPLAY_BUFFER_A) {
+    readBuffer = DISPLAY_BUFFER_B;
+    writeBuffer = DISPLAY_BUFFER_A;
   }
   else {
-    readBuffer = BUFFER_A;
-    writeBuffer = BUFFER_B;
+    readBuffer = DISPLAY_BUFFER_A;
+    writeBuffer = DISPLAY_BUFFER_B;
   }
 }
 
