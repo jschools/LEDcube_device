@@ -27,6 +27,9 @@ void initPins() {
   initPin(PIN_LAYER_SEL_2);
   
   clearAllOutputs();
+  
+  setLayer(0);
+  setGlobalEnable(true);
 }
 
 void initPin(int pin) {
@@ -35,7 +38,7 @@ void initPin(int pin) {
 }
 
 void setGlobalEnable(boolean enabled) {
-  digitalWrite(LAYER_GLOBAL_ENABLE, enabled ? HIGH : LOW);
+  digitalWrite(PIN_GLOBAL_ENABLE, enabled ? HIGH : LOW);
 }
 
 // write 'length' bytes across pins
@@ -63,9 +66,9 @@ void writeByteToRegisters(byte data) {
 }
 
 void setLayerSelectBits(int layer) {
-  digitalWrite(LAYER_SELECT_0, layer & LAYER_MASK_0 ? HIGH : LOW);
-  digitalWrite(LAYER_SELECT_1, layer & LAYER_MASK_1 ? HIGH : LOW);
-  digitalWrite(LAYER_SELECT_2, layer & LAYER_MASK_2 ? HIGH : LOW);
+  digitalWrite(PIN_LAYER_SEL_0, layer & LAYER_MASK_0 ? HIGH : LOW);
+  digitalWrite(PIN_LAYER_SEL_1, layer & LAYER_MASK_1 ? HIGH : LOW);
+  digitalWrite(PIN_LAYER_SEL_2, layer & LAYER_MASK_2 ? HIGH : LOW);
 }
 
 void setLayer(int layer) {

@@ -1,6 +1,9 @@
 // simple_test_3
 
 #include "pins.h"
+#include "layer.h"
+
+volatile unsigned char currentLayer = 0;
 
 void setup() {
   // init serial
@@ -8,6 +11,8 @@ void setup() {
   
   // init outputs
   initPins();
+  
+  setLayer(currentLayer);
 }
 
 void loop() {
@@ -29,6 +34,10 @@ void takeCommandFromSerial() {
   case '0':
     b = 0x00;
     writeBytesToRegisters(&b, 1);
+    break;
+  case '.':
+    currentLayer++;
+    setLayer(currentLayer);
     break;
   case 'p':
     delay(10);
