@@ -9,6 +9,7 @@
 // writes LOW to all output pins
 // shifts 0's into all output registers
 void initPins() {
+  initPin(PIN_GLOBAL_ENABLE);
   initPin(PIN_SHIFT_CLK);
   initPin(PIN_LATCH_CLK);
   initPin(PIN_ACTIVITY);
@@ -29,7 +30,7 @@ void initPins() {
   clearAllOutputs();
   
   setLayer(0);
-  setGlobalEnable(true);
+  //setGlobalEnable(true);
 }
 
 void initPin(int pin) {
@@ -42,12 +43,11 @@ void setGlobalEnable(boolean enabled) {
 }
 
 // write 'length' bytes across pins
-// latch at end
 void writeBytesToRegisters(byte* data, int length) {
   for (int i = 0; i < length; i++) {
     writeByteToRegisters(data[i]);
   }
-  latch();
+  //latch()
 }
 
 // set one byte across pins and shift
@@ -65,16 +65,16 @@ void writeByteToRegisters(byte data) {
   shift();
 }
 
-void setLayerSelectBits(int layer) {
-  digitalWrite(PIN_LAYER_SEL_0, layer & LAYER_MASK_0 ? HIGH : LOW);
-  digitalWrite(PIN_LAYER_SEL_1, layer & LAYER_MASK_1 ? HIGH : LOW);
-  digitalWrite(PIN_LAYER_SEL_2, layer & LAYER_MASK_2 ? HIGH : LOW);
-}
-
 void setLayer(int layer) {
   //setGlobalEnable(false);
   setLayerSelectBits(layer);
   //setGlobalEnable(true);
+}
+
+void setLayerSelectBits(int layer) {
+  digitalWrite(PIN_LAYER_SEL_0, layer & LAYER_MASK_0 ? HIGH : LOW);
+  digitalWrite(PIN_LAYER_SEL_1, layer & LAYER_MASK_1 ? HIGH : LOW);
+  digitalWrite(PIN_LAYER_SEL_2, layer & LAYER_MASK_2 ? HIGH : LOW);
 }
 
 // shift 0's into all registers

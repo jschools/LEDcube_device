@@ -1,50 +1,69 @@
 
 #include <stdlib.h>
-#include "pins.h"
-#include "layer.h"
 #include <TimerOne.h>
+#include "pins.h"
 
-#define DISPLAY_BUFFER_A 0
-#define DISPLAY_BUFFER_B 1
-
+#define CUBE_DIM 8
 #define DISPLAY_BUFFER_LENGTH 64
 #define FRAME_BUFFER_LENGTH 16
 
-
 // global state
 byte currentLayer = 0;
-byte readBuffer = DISPLAY_BUFFER_A;
-byte writeBuffer = DISPLAY_BUFFER_B;
-byte readFrameIdx;
-byte writeFrameIdx;
 
 // buffers
-byte* displayBufferA;
-byte* displayBufferB;
+byte* readDisplayBuffer;
+byte* writeDisplayBuffer;
 
 void setup() {
-  // buffers
-  displayBufferA = (byte*) calloc(DISPLAY_BUFFER_LENGTH, sizeof(byte));
-  displayBufferA = (byte*) calloc(DISPLAY_BUFFER_LENGTH, sizeof(byte));
-  
   // init outputs
   initPins();
+  
+  // buffers
+  readDisplayBuffer = (byte*) malloc(DISPLAY_BUFFER_LENGTH * sizeof(byte));
+  writeDisplayBuffer = (byte*) malloc(DISPLAY_BUFFER_LENGTH * sizeof(byte));  
+  clearBuffer(readDisplayBuffer, DISPLAY_BUFFER_LENGTH);
+  clearBuffer(writeDisplayBuffer, DISPLAY_BUFFER_LENGTH);
   
   // init serial
   Serial.begin(115200);
   
   // initialize the timer interrupt
-  Timer1.initialize(500);
+  Timer1.initialize(600); // 500
   Timer1.attachInterrupt(layerIsr);
+  
+  for (int i = 0; i < 64; i++) {
+    readDisplayBuffer[i] = 0xff;
+  }
 }
 
 void loop() {
-  
+  //Serial.readBytes((char*) readDisplayBuffer, DISPLAY_BUFFER_LENGTH);
+  //swapDisplayBuffer();
+  delay(1);
 }
 
-void layerIsr() {
+void layerIsr() { 
   currentLayer++;
+  currentLayer %= CUBE_DIM;
+  
+  writeLayerBytesToRegisters(readDisplayBuffer, currentLayer);
+  
+  setGlobalEnable(false);
+  latch();
   setLayer(currentLayer);
+  setGlobalEnable(true);
+}
+
+void clearBuffer(byte* buffer, int length) {
+  for (int i = 0; i < length; i++) {
+    buffer[i] = 0;
+  }
+}
+
+void writeLayerBytesToRegisters(byte* displayBuffer, int layer) {
+  int offset = layer * CUBE_DIM;
+  byte* layerBuffer = displayBuffer + offset;
+  writeBytesToRegisters(layerBuffer, CUBE_DIM);
 }
 
 void takeCommandFromSerial() {
@@ -64,15 +83,10 @@ void takeCommandFromSerial() {
   }
 }
 
-void swapBuffer() {
-  if (readBuffer == DISPLAY_BUFFER_A) {
-    readBuffer = DISPLAY_BUFFER_B;
-    writeBuffer = DISPLAY_BUFFER_A;
-  }
-  else {
-    readBuffer = DISPLAY_BUFFER_A;
-    writeBuffer = DISPLAY_BUFFER_B;
-  }
+void swapDisplayBuffer() {
+  byte* tmp = readDisplayBuffer;
+  readDisplayBuffer = writeDisplayBuffer;
+  writeDisplayBuffer = tmp;
 }
 
 

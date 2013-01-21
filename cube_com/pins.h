@@ -17,4 +17,8 @@
 #define PIN_LAYER_SEL_1   A4
 #define PIN_LAYER_SEL_2   A5
 
+#define LAYER_MASK_0 0x01
+#define LAYER_MASK_1 0x02
+#define LAYER_MASK_2 0x04
+
 #endif
