@@ -53,9 +53,10 @@ void layerIsr() {
   currentLayer++;
   currentLayer %= CUBE_DIM;
   
+  setGlobalEnable(false);
+  
   writeLayerBytesToRegisters(readDisplayBuffer, currentLayer);
   
-  setGlobalEnable(false);
   latch();
   setLayer(currentLayer);
   setGlobalEnable(true);
