@@ -6,8 +6,10 @@
 #include <stdlib.h>
 #include <TimerOne.h>
 #include "pins.h"
+#include "mode.h"
 
 // global state
+int mode = MODE_STREAMING;
 byte currentLayer = 0;
 
 // buffers
@@ -28,7 +30,7 @@ void setup() {
   Serial.begin(115200);
   
   // initialize the timer interrupt
-  Timer1.initialize(600); // 600
+  Timer1.initialize(1200); // 600
   Timer1.attachInterrupt(layerIsr);
   
   // draw some initial graphics
