@@ -30,7 +30,7 @@ void setup() {
   Serial.begin(115200);
   
   // initialize the timer interrupt
-  Timer1.initialize(1200); // 600
+  Timer1.initialize(600); // 600
   Timer1.attachInterrupt(layerIsr);
   
   // draw some initial graphics
@@ -56,11 +56,11 @@ void layerIsr() {
   currentLayer %= CUBE_DIM;
   
   setGlobalEnable(false);
-  
+     
   writeLayerBytesToRegisters(readDisplayBuffer, currentLayer);
+  setLayer(currentLayer);
   
   latch();
-  setLayer(currentLayer);
   setGlobalEnable(true);
 }
 
